@@ -130,13 +130,21 @@ export default function RAGWTFLanding() {
   const scrollToSection = useCallback((section: string) => {
     const element = sectionRefs.current[section];
     if (element) {
-      const navHeight = 80; // Approximate height of the navigation bar
-      const elementPosition = element.offsetTop - navHeight;
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth"
-      });
+      // Close mobile menu first
       setIsMobileMenuOpen(false);
+      
+      // Add a small delay to ensure the mobile menu is closed before scrolling
+      setTimeout(() => {
+        // Calculate different nav heights for mobile and desktop
+        const isMobile = window.innerWidth < 768; // md breakpoint
+        const navHeight = isMobile ? 120 : 80; // Mobile nav is taller due to menu
+        
+        const elementPosition = element.offsetTop - navHeight;
+        window.scrollTo({
+          top: elementPosition,
+          behavior: "smooth"
+        });
+      }, 100); // Small delay to allow menu to close
     }
   }, []);
 
@@ -524,7 +532,7 @@ export default function RAGWTFLanding() {
       </nav>
 
       {/* Hero Section */}
-      <section ref={(el) => sectionRefs.current.overview = el} className="py-12 px-4 relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 scroll-mt-20">
+      <section ref={(el) => sectionRefs.current.overview = el} className="py-12 px-4 relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 scroll-mt-20 md:scroll-mt-20">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 dark:bg-blue-800 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -630,8 +638,8 @@ export default function RAGWTFLanding() {
       </section>
 
       {/* Features Section */}
-      <section ref={(el) => sectionRefs.current.features = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20">
-        <div className="container mx-auto">
+      <section ref={(el) => sectionRefs.current.features = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20 md:scroll-mt-20">
+        <div className="container mx-auto px-4 lg:px-16 xl:px-24">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
               Key Features
@@ -749,8 +757,8 @@ export default function RAGWTFLanding() {
       </section>
 
       {/* Architecture Section */}
-      <section ref={(el) => sectionRefs.current.architecture = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20">
-        <div className="container mx-auto">
+      <section ref={(el) => sectionRefs.current.architecture = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20 md:scroll-mt-20">
+        <div className="container mx-auto px-4 lg:px-16 xl:px-24">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
               Architecture Overview
@@ -859,7 +867,7 @@ export default function RAGWTFLanding() {
       </section>
 
       {/* Setup Section */}
-      <section ref={(el) => sectionRefs.current.setup = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20">
+      <section ref={(el) => sectionRefs.current.setup = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20 md:scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -1072,7 +1080,7 @@ export default function RAGWTFLanding() {
       </section>
 
       {/* Technologies Section */}
-      <section ref={(el) => sectionRefs.current.tech = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20">
+      <section ref={(el) => sectionRefs.current.tech = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20 md:scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -1256,7 +1264,7 @@ export default function RAGWTFLanding() {
       </section>
 
       {/* Community Section */}
-      <section ref={(el) => sectionRefs.current.community = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20">
+      <section ref={(el) => sectionRefs.current.community = el} className="py-12 px-4 bg-slate-50 dark:bg-slate-900/50 scroll-mt-20 md:scroll-mt-20">
         <div className="container mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
