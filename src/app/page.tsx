@@ -116,20 +116,36 @@ export default function RAGWTFLanding() {
       setProgress(scrollProgress);
       setShowScrollTop(window.scrollY > 300);
       
+      // Find the section that is currently most visible in the viewport
+      let currentActiveSection = activeSection;
+      let minDistance = Infinity;
+      
       Object.entries(sectionRefs.current).forEach(([section, ref]) => {
-        if (ref && scrollPosition >= ref.offsetTop) {
-          setActiveSection(section);
+        if (ref) {
+          const sectionTop = ref.offsetTop;
+          const distance = Math.abs(sectionTop - window.scrollY);
+          
+          // If this section is closer to the top of viewport, make it active
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentActiveSection = section;
+          }
         }
       });
+      
+      setActiveSection(currentActiveSection);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [activeSection]);
 
   const scrollToSection = useCallback((section: string) => {
     const element = sectionRefs.current[section];
     if (element) {
+      // Immediately set the active section for better UX
+      setActiveSection(section);
+      
       // Close mobile menu first
       setIsMobileMenuOpen(false);
       
@@ -144,6 +160,11 @@ export default function RAGWTFLanding() {
           top: elementPosition,
           behavior: "smooth"
         });
+        
+        // Force a scroll event to ensure active section is properly updated after scrolling
+        setTimeout(() => {
+          window.dispatchEvent(new Event('scroll'));
+        }, 300);
       }, 100); // Small delay to allow menu to close
     }
   }, []);
