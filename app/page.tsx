@@ -223,15 +223,16 @@ console.log(result.answer);
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <a href="#getting-started"> 
             <Button
               size="lg"
               className="gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 font-montserrat shadow-lg hover:shadow-xl transition-all"
+              asChild
             >
-              <Play className="w-4 h-4" />
-              Get Started <ArrowRight className="w-4 h-4" />
+              <a href="#getting-started">
+                <Play className="w-4 h-4" />
+                Get Started <ArrowRight className="w-4 h-4" />
+              </a>
             </Button>
-            </a>
             <Button
               variant="outline"
               size="lg"
