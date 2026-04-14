@@ -1,29 +1,37 @@
-# Use official Node.js runtime as base image
+# ---- Base Stage ----
 FROM node:18-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# ---- Dependencies Stage ----
+FROM base AS deps
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json ./
-RUN npm install -g pnpm && pnpm install
+# Copy lockfile and package manifest for reproducible installs
+COPY package.json pnpm-lock.yaml ./
 
-# Rebuild the source code only when needed
+# Install all dependencies (including optional native binaries for linux-musl-x64)
+RUN pnpm install --frozen-lockfile
+
+# ---- Builder Stage ----
 FROM base AS builder
 WORKDIR /app
+
+# Copy installed node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copy the rest of the source
 COPY . .
 
-# Build the Next.js application
-RUN npm run build
+# Build the Next.js application (outputs static files to /app/out)
+RUN pnpm run build
 
 # ---- Run Stage ----
 FROM nginx:alpine AS runner
 
-# Copy exported static site (under /app/out) into nginx html dir
+# Copy exported static site into nginx html directory
 COPY --from=builder /app/out /usr/share/nginx/html
 
 EXPOSE 80
